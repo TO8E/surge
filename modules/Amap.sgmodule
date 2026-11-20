@@ -1,7 +1,6 @@
 #!name=高德地图
-#!desc=过滤高德地图开屏、首页、导航、搜索、打车与我的页面广告（纯原生转换，不合入基石；需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!desc=过滤高德地图开屏、首页、导航、搜索、打车与我的页面广告（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
 #!requirement=CORE_VERSION>=20
-# 转换自: Amap.lpx (2026-11-02)，不合并基石插件
 # 原作者: RuCu6 (https://github.com/RuCu6), kokoryh (https://github.com/kokoryh), ishowshu (https://github.com/ishowshu), 可莉🅥 (https://github.com/luestr/ProxyResource)
 
 [Rule]

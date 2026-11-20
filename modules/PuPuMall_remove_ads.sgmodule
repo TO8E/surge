@@ -1,8 +1,6 @@
 #!name=朴朴超市去广告
-#!desc=移除朴朴超市开屏、轮播图、弹窗、悬浮动画、热搜及推广广告，精简我的页面（需开启 MITM；注意外部 JS 位于 kelee.one，建议提供源码托管至本仓库 scripts/ 目录）
+#!desc=移除朴朴超市开屏、轮播图、弹窗、悬浮动画、热搜及推广广告，精简我的页面（需开启 MITM）
 #!requirement=CORE_VERSION>=20
-# 转换自: PuPuMall_remove_ads.lpx (2026-10-02)
-# 基石对照结果: Block_HTTPDNS.lpx / BlockAdvertisers.lpx 中无朴朴超市专属依赖规则
 # 原作者: kelv1n1n (https://github.com/kelv1n1n), 可莉🅥 (https://github.com/luestr/ProxyResource)
 
 [Map Local]

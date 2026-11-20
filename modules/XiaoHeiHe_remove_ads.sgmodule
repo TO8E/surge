@@ -1,8 +1,6 @@
 #!name=小黑盒去广告
-#!desc=移除小黑盒开屏广告和热点板块信息流广告（纯原生转换，无外部脚本；需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!desc=移除小黑盒开屏广告和热点板块信息流广告（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
 #!requirement=CORE_VERSION>=20
-# 转换自: XiaoHeiHe_remove_ads.lpx (2026-10-02)
-# 基石对照结果: Block_HTTPDNS.lpx / BlockAdvertisers.lpx 中无小黑盒专属依赖规则
 # 原作者: 可莉🅥 (https://github.com/luestr/ProxyResource)
 
 [Map Local]

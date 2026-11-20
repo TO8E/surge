@@ -1,8 +1,6 @@
 #!name=下厨房去广告
-#!desc=移除下厨房开屏广告、页面推广及横幅，精简首页标签（纯原生转换，无外部脚本；需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!desc=移除下厨房开屏广告、页面推广及横幅，精简首页标签（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
 #!requirement=CORE_VERSION>=20
-# 转换自: XiaChuFang_remove_ads.lpx (2026-10-02)
-# 基石对照结果: Block_HTTPDNS.lpx / BlockAdvertisers.lpx 中无下厨房专属依赖规则
 # 原作者: 可莉🅥 (https://github.com/luestr/ProxyResource)
 
 [Map Local]

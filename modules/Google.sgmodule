@@ -1,6 +1,5 @@
 #!name=Google 重定向
-#!desc=将 Google 中国域名（google.cn / g.cn）通过 307 重定向至 .com 域名，如遇频繁跳转请禁用本模块（需开启 MITM）
-# 转换自: Google.lpx (2026-11-02)，不合并基石插件
+#!desc=将 Google 中国域名（google.cn / g.cn）通过 307 重定向至 .com，如遇频繁跳转请禁用（需开启 MITM）
 # 原作者: sooyaaabo (https://github.com/sooyaaabo)
 
 [URL Rewrite]

@@ -1,6 +1,5 @@
 #!name=铁路12306
-#!desc=过滤铁路 12306 开屏与应用内广告（纯原生转换，不合入基石；需开启 MITM）
-# 转换自: Railway12306.lpx (2026-11-02)，不合并基石插件
+#!desc=过滤铁路 12306 开屏与应用内广告（需开启 MITM）
 # 原作者: RuCu6 (https://github.com/RuCu6), kokoryh (https://github.com/kokoryh)
 
 [Rule]

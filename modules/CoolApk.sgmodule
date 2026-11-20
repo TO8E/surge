@@ -1,7 +1,6 @@
 #!name=酷安
 #!desc=过滤酷安广告并重定向酷安外链（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
 #!requirement=CORE_VERSION>=20
-# 转换自: CoolApk.lpx (2026-11-02)
 # 原作者: RuCu6 (https://github.com/RuCu6), ZenmoFeiShi (https://github.com/ZenmoFeiShi), VenenoSix24 (https://github.com/VenenoSix24), 可莉🅥 (https://github.com/luestr/ProxyResource)
 
 [Map Local]

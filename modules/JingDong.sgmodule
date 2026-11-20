@@ -1,7 +1,6 @@
 #!name=京东
-#!desc=过滤京东广告（仅支持京东标准模式，纯原生转换，不合入基石；需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!desc=过滤京东广告，仅支持京东标准模式（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
 #!requirement=CORE_VERSION>=20
-# 转换自: JingDong.lpx (2026-11-02)，不合并基石插件，已移除慢慢买历史比价相关规则与脚本
 # 原作者: RuCu6 (https://github.com/RuCu6), Maasea (https://github.com/Maasea), 可莉🅥 (https://github.com/luestr/ProxyResource)
 
 [Rule]

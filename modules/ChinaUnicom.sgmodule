@@ -1,7 +1,6 @@
 #!name=中国联通去广告
-#!desc=过滤中国联通开屏、搜索、浮窗及部分页面推广（纯原生规则与 JQ 重写，无外部脚本；需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!desc=过滤中国联通开屏、搜索、浮窗及部分页面推广（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
 #!requirement=CORE_VERSION>=20
-# 转换自: ChinaUnicom.lpx (2026-11-10)，不合并基石插件
 # 原作者: mist-whisper (https://github.com/mist-whisper)
 
 [Rule]

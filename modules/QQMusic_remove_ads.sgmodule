@@ -1,11 +1,9 @@
 #!name=QQ音乐去广告
-#!desc=过滤 QQ 音乐广告，精准拆入 kelee.one 基石中 QQ 音乐自身、腾讯优量汇/Tangram 广告及 DNSPod HTTPDNS 依赖规则，避免误杀其他应用正常功能
-# 转换自: QQMusic_remove_ads.lpx (2026-10-02)
-# 精准拆分依赖来源: BlockAdvertisers.lpx, Block_HTTPDNS.lpx
+#!desc=过滤 QQ 音乐广告（含优量汇/Tangram 广告与 DNSPod HTTPDNS 规则，无需 MITM）
 # 原作者: 可莉🅥 (https://github.com/luestr/ProxyResource), VirgilClyne (https://github.com/VirgilClyne)
 
 [Rule]
-# > QQ 音乐专属广告 (来源: QQMusic_remove_ads.lpx)
+# > QQ 音乐专属广告
 DOMAIN,adstats.tencentmusic.com,REJECT,pre-matching
 DOMAIN,ad.tencentmusic.com,REJECT,pre-matching
 DOMAIN,adcdn.tencentmusic.com,REJECT,pre-matching
@@ -18,12 +16,12 @@ DOMAIN,tmead.y.qq.com,REJECT,pre-matching
 DOMAIN,tmeadbak.y.qq.com,REJECT,pre-matching
 DOMAIN,tmeadquic.y.qq.com,REJECT,pre-matching
 
-# > 精准依赖: QQ 音乐自身遗漏域名 (来源: BlockAdvertisers.lpx)
+# > 精准依赖: QQ 音乐自身遗漏域名
 DOMAIN,tmeadcomm.y.qq.com,REJECT,pre-matching
 DOMAIN,stat.y.qq.com,REJECT,pre-matching
 DOMAIN,stat6.y.qq.com,REJECT,pre-matching
 
-# > 精准依赖: 腾讯优量汇 / 广点通 / Tangram 广告投放域名 (来源: BlockAdvertisers.lpx)
+# > 精准依赖: 腾讯优量汇 / 广点通 / Tangram 广告投放域名
 DOMAIN,sdk.e.qq.com,REJECT,pre-matching
 DOMAIN,tangram.e.qq.com,REJECT,pre-matching
 DOMAIN,pgdt.gtimg.cn,REJECT,pre-matching
@@ -32,6 +30,6 @@ DOMAIN-SUFFIX,l.qq.com,REJECT,pre-matching
 DOMAIN-SUFFIX,gdtimg.com,REJECT,pre-matching
 DOMAIN-SUFFIX,ugdtimg.com,REJECT,pre-matching
 
-# > 精准依赖: 腾讯 DNSPod HTTPDNS (来源: Block_HTTPDNS.lpx)
+# > 精准依赖: 腾讯 DNSPod HTTPDNS
 IP-CIDR,119.29.29.98/32,REJECT,no-resolve,pre-matching
 IP-CIDR,119.29.29.99/32,REJECT,no-resolve,pre-matching

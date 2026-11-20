@@ -1,7 +1,6 @@
 #!name=淘宝
-#!desc=过滤淘宝广告（纯原生转换，不合入基石；需开启 MITM）
+#!desc=过滤淘宝广告（需开启 MITM）
 #!requirement=CORE_VERSION>=20
-# 转换自: TaoBao.lpx (2026-11-02)，不合并基石插件
 # 原作者: RuCu6 (https://github.com/RuCu6), ishowshu (https://github.com/ishowshu), 可莉🅥 (https://github.com/luestr/ProxyResource)
 
 [Rule]

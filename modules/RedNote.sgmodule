@@ -1,7 +1,6 @@
 #!name=小红书
-#!desc=过滤小红书广告、去除图片/实况/视频水印（纯原生转换，不合入基石；需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!desc=过滤小红书广告，去除图片、实况与视频水印（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
 #!requirement=CORE_VERSION>=20
-# 转换自: RedNote.lpx (2026-11-02)，不合并基石插件
 # 原作者: RuCu6 (https://github.com/RuCu6), fmz200 (https://github.com/fmz200), meichiny (https://github.com/meichiny), 可莉🅥 (https://github.com/luestr/ProxyResource)
 
 [Rule]
