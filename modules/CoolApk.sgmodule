@@ -1,0 +1,149 @@
+#!name=酷安去广告
+#!desc=过滤酷安开屏、信息流、评论区与热搜广告，重定向酷安外链；已拆分内置酷安常用广告联盟与 HTTPDNS 依赖规则，可单独启用（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!requirement=CORE_VERSION>=20
+# 转换自: CoolApk.lpx (2026-11-02)
+# 拆分公共依赖来源: Block_HTTPDNS.lpx, BlockAdvertisers.lpx
+# 原作者: RuCu6 (https://github.com/RuCu6), ZenmoFeiShi (https://github.com/ZenmoFeiShi), VenenoSix24 (https://github.com/VenenoSix24), 可莉🅥 (https://github.com/luestr/ProxyResource), VirgilClyne (https://github.com/VirgilClyne)
+
+[Rule]
+# > 公共依赖: 穿山甲 / 字节跳动广告 SDK (来源: BlockAdvertisers.lpx，保留 tnc DIRECT 放行顺序)
+DOMAIN-KEYWORD,adstrategy,REJECT,pre-matching
+AND,((DOMAIN-KEYWORD,tnc),(OR,((DOMAIN-SUFFIX,capcutapi.com),(DOMAIN-SUFFIX,zijieapi.com),(DOMAIN-SUFFIX,isnssdk.com),(DOMAIN-SUFFIX,toutiaoapi.com),(DOMAIN-SUFFIX,bytedance.com),(DOMAIN-SUFFIX,snssdk.com),(DOMAIN-SUFFIX,sgsnssdk.com)))),DIRECT
+AND,((DOMAIN-KEYWORD,-ad-),(DOMAIN-SUFFIX,byteimg.com)),REJECT,pre-matching
+AND,((DOMAIN-KEYWORD,ads),(DOMAIN-KEYWORD,-normal.zijieapi.com)),REJECT
+DOMAIN,lf-ad-ies.bytecdn.cn,REJECT,pre-matching
+DOMAIN,dig.bdurl.net,REJECT,pre-matching
+DOMAIN,extlog.snssdk.com,REJECT,pre-matching
+DOMAIN,mcs.snssdk.com,REJECT,pre-matching
+DOMAIN-SUFFIX,bds.snssdk.com,REJECT,pre-matching
+DOMAIN-SUFFIX,byteadverts.com,REJECT,pre-matching
+DOMAIN-SUFFIX,ctobsnssdk.com,REJECT,pre-matching
+DOMAIN-SUFFIX,pangle.io,REJECT,pre-matching
+DOMAIN-KEYWORD,pangolin,REJECT,pre-matching
+DOMAIN-KEYWORD,pglstatp,REJECT,pre-matching
+DOMAIN-KEYWORD,panplayable-toutiao,REJECT,pre-matching
+DOMAIN-KEYWORD,-ad-sign.byteimg.com,REJECT,pre-matching
+DOMAIN-KEYWORD,-ad.byteoversea.com,REJECT,pre-matching
+DOMAIN-KEYWORD,asiad.byteactivity,REJECT,pre-matching
+
+# > 公共依赖: 腾讯优量汇 / 广点通广告 SDK (来源: BlockAdvertisers.lpx)
+DOMAIN,tdid.m.qq.com,REJECT,pre-matching
+DOMAIN,ads.privacy.qq.com,REJECT,pre-matching
+DOMAIN,pgdt.gtimg.cn,REJECT,pre-matching
+DOMAIN,qzs.qq.com,REJECT,pre-matching
+DOMAIN,h.trace.qq.com,REJECT,pre-matching
+DOMAIN,sdk.e.qq.com,REJECT,pre-matching
+DOMAIN,tangram.e.qq.com,REJECT,pre-matching
+DOMAIN-KEYWORD,trace.qq.com,REJECT,pre-matching
+DOMAIN-SUFFIX,gdt.qq.com,REJECT,pre-matching
+DOMAIN-SUFFIX,l.qq.com,REJECT,pre-matching
+DOMAIN-SUFFIX,gdtimg.com,REJECT,pre-matching
+DOMAIN-SUFFIX,ugdtimg.com,REJECT,pre-matching
+
+# > 公共依赖: 快手联盟广告 SDK (来源: BlockAdvertisers.lpx)
+DOMAIN,gdfp.gifshow.com,REJECT,pre-matching
+DOMAIN,open.e.kuaishou.com,REJECT,pre-matching
+DOMAIN,open.e.kuaishou.cn,REJECT,pre-matching
+DOMAIN,adtrack.e.kuaishou.com,REJECT,pre-matching
+DOMAIN-SUFFIX,partner.gifshow.com,REJECT,pre-matching
+DOMAIN-SUFFIX,adukwai.com,REJECT,pre-matching
+DOMAIN-SUFFIX,adkwai.com,REJECT,pre-matching
+
+# > 公共依赖: 百度百青藤广告 SDK (来源: BlockAdvertisers.lpx)
+DOMAIN,afd.baidu.com,REJECT,pre-matching
+DOMAIN,als.baidu.com,REJECT,pre-matching
+DOMAIN,bgg.baidu.com,REJECT,pre-matching
+DOMAIN,cpro.baidustatic.com,REJECT,pre-matching
+DOMAIN,feed-image.baidu.com,REJECT,pre-matching
+DOMAIN,click-bes.baidu.com,REJECT,pre-matching
+DOMAIN,eclick.baidu.com,REJECT,pre-matching
+DOMAIN,mobads-logs.baidu.com,REJECT,pre-matching
+DOMAIN,mobads-pre-config.cdn.bcebos.com,REJECT,pre-matching
+DOMAIN,mobads.baidu.com,REJECT,pre-matching
+DOMAIN,nadvideo2.baidu.com,REJECT,pre-matching
+DOMAIN,wn.pos.baidu.com,REJECT,pre-matching
+DOMAIN,miniapp-ad.cdn.bcebos.com,REJECT,pre-matching
+DOMAIN,hm.baidu.com,REJECT,pre-matching
+DOMAIN,dlswbr.baidu.com,REJECT,pre-matching
+DOMAIN,miao.baidu.com,REJECT,pre-matching
+DOMAIN-SUFFIX,union.baidu.cn,REJECT,pre-matching
+DOMAIN-SUFFIX,union.baidu.com,REJECT,pre-matching
+
+# > 公共依赖: 倍孜 / 京东 / Sigmob / 友盟广告与统计 SDK (来源: BlockAdvertisers.lpx)
+DOMAIN-SUFFIX,beizi.biz,REJECT,pre-matching
+DOMAIN-SUFFIX,beizi.info,REJECT,pre-matching
+DOMAIN-SUFFIX,beizi.online,REJECT,pre-matching
+DOMAIN-SUFFIX,ad-scope.com.cn,REJECT,pre-matching
+DOMAIN-SUFFIX,adscope.com.cn,REJECT,pre-matching
+DOMAIN-SUFFIX,adscope.cn,REJECT,pre-matching
+DOMAIN-SUFFIX,adscope.xyz,REJECT,pre-matching
+DOMAIN-SUFFIX,adn-plus.com.cn,REJECT,pre-matching
+DOMAIN-SUFFIX,adnplus.com.cn,REJECT,pre-matching
+DOMAIN-SUFFIX,adhub.com.cn,REJECT,pre-matching
+DOMAIN,dsp-x.jd.com,REJECT,pre-matching
+DOMAIN,im-x.jd.com,REJECT,pre-matching
+DOMAIN,xlog.jd.com,REJECT,pre-matching
+DOMAIN,janapi.jd.com,REJECT,pre-matching
+DOMAIN-SUFFIX,sigmob.cn,REJECT,pre-matching
+DOMAIN-SUFFIX,umeng.com,REJECT,pre-matching
+DOMAIN-SUFFIX,umtrack.com,REJECT,pre-matching
+DOMAIN-SUFFIX,umsns.com,REJECT,pre-matching
+DOMAIN-SUFFIX,umengcloud.com,REJECT,pre-matching
+DOMAIN-SUFFIX,umtrack0.com,REJECT,pre-matching
+DOMAIN-SUFFIX,umtrack1.com,REJECT,pre-matching
+DOMAIN-SUFFIX,umtrack2.com,REJECT,pre-matching
+DOMAIN-SUFFIX,um0.cn,REJECT,pre-matching
+DOMAIN-SUFFIX,um1.cn,REJECT,pre-matching
+DOMAIN-SUFFIX,umv0.com,REJECT,pre-matching
+DOMAIN-SUFFIX,umv5.com,REJECT,pre-matching
+
+# > 公共依赖: 通用及阿里/腾讯/百度/快手 HTTPDNS 域名规则 (来源: Block_HTTPDNS.lpx)
+DOMAIN-KEYWORD,httpdns,REJECT,pre-matching
+DOMAIN-KEYWORD,httpsdns,REJECT,pre-matching
+DOMAIN,cdndns.kwd.inkuai.com,REJECT,pre-matching
+DOMAIN,hdns.k-dyn.com,REJECT,pre-matching
+DOMAIN,apidns.kwd.inkuai.com,REJECT,pre-matching
+DOMAIN,apidns-js.kwd.inkuai.com,REJECT,pre-matching
+DOMAIN,dns.jd.com,REJECT,pre-matching
+
+# > 公共依赖: 通用 HTTPDNS HTTP 规则 (来源: Block_HTTPDNS.lpx，含嘀嗒出行放行例外)
+USER-AGENT,httpdns*,REJECT
+USER-AGENT,httpsdns*,REJECT
+USER-AGENT,Httpdns*,REJECT
+USER-AGENT,Httpsdns*,REJECT
+AND,((URL-REGEX,^http://119\.29\.29\.90/d\?),(USER-AGENT,%E5%98%80%E5%97%92%E5%87%BA%E8%A1%8C*)),DIRECT
+AND,((URL-REGEX,^http://119\.28\.28\.90/d\?),(USER-AGENT,%E5%98%80%E5%97%92%E5%87%BA%E8%A1%8C*)),DIRECT
+URL-REGEX,^http://((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:/v?[0-9]+)?/(?:sign_)?(?:(?:d|ss)[46]?|resolve)\?,REJECT
+URL-REGEX,^http://\[[0-9a-fA-F:]+\](?:/v?[0-9]+)?/(?:sign_)?(?:(?:d|ss)[46]?|resolve)\?,REJECT
+URL-REGEX,^http://((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):\d+/httpdns/,REJECT
+URL-REGEX,^http://\[[0-9a-fA-F:]+\]:\d+/httpdns/,REJECT
+
+# > 公共依赖: 阿里云/DNSPod/百度/京东 HTTPDNS IP 规则 (来源: Block_HTTPDNS.lpx)
+IP-CIDR,203.107.1.0/24,REJECT,no-resolve,pre-matching
+IP-CIDR,119.29.29.98/32,REJECT,no-resolve,pre-matching
+IP-CIDR,119.29.29.99/32,REJECT,no-resolve,pre-matching
+IP-CIDR,180.76.76.200/32,REJECT,no-resolve,pre-matching
+IP-CIDR,101.124.19.122/32,REJECT,no-resolve,pre-matching
+IP-CIDR,103.224.222.208/32,REJECT,no-resolve,pre-matching
+IP-CIDR6,2402:db40:5100:1011::5/128,REJECT,no-resolve,pre-matching
+
+[Map Local]
+# > 屏蔽酷安热搜推荐
+^https://api\.coolapk\.com/(?i)v6/search\?.*type=hotSearch data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+[Body Rewrite]
+# > 净化酷安帖子详情、评论区、信息流、首页与我的页面配置
+http-response-jq ^https://api\.coolapk\.com/(?i)v6/feed/detail\? '.data.hotReplyRows |= if . then map(select(.id?)) else . end | .data.topReplyRows |= if . then map(select(.id?)) else . end | reduce ("detailSponsorCard", "include_goods", "include_goods_ids") as $key (.; .data[$key] = [])'
+http-response-jq ^https://api\.coolapk\.com/(?i)v6/feed/replyList 'if .data? and ((.data | type) == "array") and (.data | length > 0) then .data |= map(select(.id?)) else . end'
+http-response-jq ^https://api\.coolapk\.com/(?i)v6/main/dataList '.data |= (if (type=="array" and length>0) then map(select((.entityTemplate!="sponsorCard") and (.title!="精选配件"))) else . end)'
+http-response-jq ^https://api\.coolapk\.com/(?i)v6/page/dataList '.data |= map(select(.title != "话题热议" and (.entityId != 36104 and .entityId != 24309 and .entityId != 12889 and .entityId != 21063 and .entityId != 35730 and .entityId != 35846 and .entityId != 28374 and .entityId != 28375 and .entityId != 27332 and .entityId != 20090 and .entityId != 28773 and .entityId != 29343 and .entityId != 21106)) | if .entities then (.entities |= map(select(.title != "睡个好觉需要什么？"))) else . end)'
+http-response-jq ^https://api\.coolapk\.com/(?i)v6/main/indexV8 '.data |= map(select((.entityId != 32557 and .entityId != 29349 and .entityId != 28621) and ((.title // "") | test("值得买|红包") | not)))'
+http-response-jq ^https://api\.coolapk\.com/(?i)v6/main/init 'del(.data[]? | select(.entityId == 944 or .entityId == 945 or .entityId == 24455 or .entityId == 36839 or .entityId == 1635 or .title == "关注")) | .data |= map(if .entities then .entities |= map(select(.entityId != 1635 and .entityId != 2261 and .entityId != 1633 and .entityId != 413 and .entityId != 417 and .entityId != 1754 and .entityId != 1966 and .entityId != 2274 and .entityId != 1170 and .entityId != 1175 and .entityId != 1190 and .entityId != 2258 and .title != "关注")) else . end)'
+http-response-jq ^https://api\.coolapk\.com/(?i)v6/account/loadConfig\?key=my_page_card_config '.data |= map(select(.entityType != "textLink" and (.entityId != 1001 and .entityId != 1003 and .entityId != 1004 and .entityId != 1005)) | if .entities then .entities |= map(select(.entityType != "textLink")) else . end)'
+
+[Script]
+# > 酷安外链直接 302 重定向
+酷安链接重定向 = type=http-request,pattern=^https://www\.coolapk\.com/(?i)link.*,script-path=https://raw.githubusercontent.com/VenenoSix24/Ivy-Script/main/Loon/script/Coolapk_Redirect.js,requires-body=false,timeout=10,engine=jsc
+
+[MITM]
+hostname = %APPEND% api.coolapk.com, www.coolapk.com
