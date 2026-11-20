@@ -13,11 +13,9 @@
 
 ## 转换规范说明
 
-- **独立解耦**：不单独生成全局 `Block_HTTPDNS` / `BlockAdvertisers` 模块，仅按应用实际依赖拆分对应规则写入各模块。
+- **独立解耦**：仅对 `kelee.one` 插件按需精准拆分其实际依赖的规则，剔除广义遥测、无关推送及跨应用通用规则，避免误杀；非 `kelee.one` 插件保持原功能直转。
 - **元数据规范**：仅使用 Surge 官方支持的 `#!name`、`#!desc`、`#!requirement` 指令，移除 Loon 专有字段。
-- **规则优化**：
-  - 域名规则置于 IP 规则之前；对无 `DIRECT` 放行冲突的 `REJECT` 域名/IP 规则启用 `pre-matching`。
-  - 保留字节跳动 `tnc` 与嘀嗒出行的 `DIRECT` 放行顺序，不对其冲突规则加 `pre-matching`。
+- **规则优化**：域名规则置于 IP 规则之前；对无 `DIRECT` 放行冲突的 `REJECT` 域名/IP 规则启用 `pre-matching`。
 - **原生重写与脚本**：
   - Loon `reject_dict(200)` → Surge `[Map Local]` 内联文本 JSON 响应。
   - Loon `response.json.jq(...)` → Surge 原生 `[Body Rewrite]` `http-response-jq`（单引号包裹表达式，无需二次转义；并将 `(?i)` 置于 host 之后以保留 Surge 6.13+ 的 host 前缀优化）。
