@@ -1,0 +1,69 @@
+#!name=QQ音乐去广告
+#!desc=过滤 QQ 音乐广告，已内置 HTTPDNS 拦截器（通用/DNSPod）与广告平台拦截器（QQ 音乐/腾讯优量汇及统计）中的公共依赖规则，可单独启用
+# 转换自: QQMusic_remove_ads.lpx (2026-10-02)
+# 公共依赖来源: Block_HTTPDNS.lpx, BlockAdvertisers.lpx
+# 原作者: 可莉🅥 (https://github.com/luestr/ProxyResource), VirgilClyne (https://github.com/VirgilClyne)
+
+[Rule]
+# > QQ 音乐专属广告 (来源: QQMusic_remove_ads.lpx)
+DOMAIN,adstats.tencentmusic.com,REJECT,pre-matching
+DOMAIN,ad.tencentmusic.com,REJECT,pre-matching
+DOMAIN,adcdn.tencentmusic.com,REJECT,pre-matching
+DOMAIN,adcdn6.tencentmusic.com,REJECT,pre-matching
+DOMAIN,adexpo.tencentmusic.com,REJECT,pre-matching
+DOMAIN,adclick.tencentmusic.com,REJECT,pre-matching
+DOMAIN,mc.tencentmusic.com,REJECT,pre-matching
+DOMAIN,monitor.music.qq.com,REJECT,pre-matching
+DOMAIN,tmead.y.qq.com,REJECT,pre-matching
+DOMAIN,tmeadbak.y.qq.com,REJECT,pre-matching
+DOMAIN,tmeadquic.y.qq.com,REJECT,pre-matching
+
+# > 公共依赖: QQ 音乐及腾讯广告/统计平台 (来源: BlockAdvertisers.lpx)
+DOMAIN,tmeadcomm.y.qq.com,REJECT,pre-matching
+DOMAIN,stat.y.qq.com,REJECT,pre-matching
+DOMAIN,stat6.y.qq.com,REJECT,pre-matching
+DOMAIN,tdid.m.qq.com,REJECT,pre-matching
+DOMAIN,ads.privacy.qq.com,REJECT,pre-matching
+DOMAIN,huatuocode.huatuo.qq.com,REJECT,pre-matching
+DOMAIN,ios.bugly.qq.com,REJECT,pre-matching
+DOMAIN,pro.bugly.qq.com,REJECT,pre-matching
+DOMAIN,otheve.beacon.qq.com,REJECT,pre-matching
+DOMAIN,pgdt.gtimg.cn,REJECT,pre-matching
+DOMAIN,qzs.qq.com,REJECT,pre-matching
+DOMAIN,rmonitor.qq.com,REJECT,pre-matching
+DOMAIN,tpns.qq.com,REJECT,pre-matching
+DOMAIN,wup.imtt.qq.com,REJECT,pre-matching
+DOMAIN,tpstelemetry.tencent.com,REJECT,pre-matching
+DOMAIN,oth.str.mdt.qq.com,REJECT,pre-matching
+DOMAIN,h.trace.qq.com,REJECT,pre-matching
+DOMAIN,sdk.e.qq.com,REJECT,pre-matching
+DOMAIN,tangram.e.qq.com,REJECT,pre-matching
+DOMAIN-KEYWORD,adstrategy,REJECT,pre-matching
+DOMAIN-KEYWORD,trace.qq.com,REJECT,pre-matching
+DOMAIN-SUFFIX,gdt.qq.com,REJECT,pre-matching
+DOMAIN-SUFFIX,l.qq.com,REJECT,pre-matching
+DOMAIN-SUFFIX,imtmp.net,REJECT,pre-matching
+DOMAIN-SUFFIX,gdtimg.com,REJECT,pre-matching
+DOMAIN-SUFFIX,ugdtimg.com,REJECT,pre-matching
+
+# > 公共依赖: 通用 HTTPDNS 域名规则 (来源: Block_HTTPDNS.lpx)
+DOMAIN-KEYWORD,httpdns,REJECT,pre-matching
+DOMAIN-KEYWORD,httpsdns,REJECT,pre-matching
+
+# > 公共依赖: 通用 HTTPDNS HTTP 规则 (来源: Block_HTTPDNS.lpx，含嘀嗒出行放行例外)
+USER-AGENT,httpdns*,REJECT
+USER-AGENT,httpsdns*,REJECT
+USER-AGENT,Httpdns*,REJECT
+USER-AGENT,Httpsdns*,REJECT
+AND,((URL-REGEX,^http://119\.29\.29\.90/d\?),(USER-AGENT,%E5%98%80%E5%97%92%E5%87%BA%E8%A1%8C*)),DIRECT
+AND,((URL-REGEX,^http://119\.28\.28\.90/d\?),(USER-AGENT,%E5%98%80%E5%97%92%E5%87%BA%E8%A1%8C*)),DIRECT
+URL-REGEX,^http://((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:/v?[0-9]+)?/(?:sign_)?(?:(?:d|ss)[46]?|resolve)\?,REJECT
+URL-REGEX,^http://\[[0-9a-fA-F:]+\](?:/v?[0-9]+)?/(?:sign_)?(?:(?:d|ss)[46]?|resolve)\?,REJECT
+URL-REGEX,^http://((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/v\d/resolv\?,REJECT
+URL-REGEX,^http://((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):\d+/httpdns/,REJECT
+URL-REGEX,^http://\[[0-9a-fA-F:]+\]:\d+/httpdns/,REJECT
+
+# > 公共依赖: 腾讯广告与 DNSPod HTTPDNS IP 规则 (来源: BlockAdvertisers.lpx, Block_HTTPDNS.lpx)
+IP-CIDR,47.110.187.87/32,REJECT,no-resolve,pre-matching
+IP-CIDR,119.29.29.98/32,REJECT,no-resolve,pre-matching
+IP-CIDR,119.29.29.99/32,REJECT,no-resolve,pre-matching
