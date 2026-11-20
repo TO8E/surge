@@ -1,6 +1,6 @@
 #!name=YouTube
 #!desc=移除 YouTube 首页信息流、搜索、Shorts 和播放器广告，支持后台播放、地区参数、隐藏 Shorts/创建按钮与字幕翻译（需开启 MITM）
-#!arguments=background_playback:false,playback_region:original,translation_enabled:false,translation_target:zh-CN,hide_home_shorts:false,hide_shorts_everywhere:false,hide_shorts_tab:false,hide_create_button:false,log_enabled:false,quality_research:false,log_level:info,capture_budget:32
+#!arguments=background_playback:false,playback_region:original,translation_enabled:false,translation_target:zh-CN,hide_home_shorts:false,hide_shorts_everywhere:false,hide_shorts_tab:true,hide_create_button:true,log_enabled:false,quality_research:false,log_level:info,capture_budget:32
 #!arguments-desc=background_playback(后台播放:true/false), playback_region(地区:original/CN/HK/TW/US/JP/KR/SG/GB/DE/RU), translation_enabled(字幕翻译:true/false), translation_target(字幕语言:zh-CN/en-US), hide_home_shorts/hide_shorts_everywhere/hide_shorts_tab/hide_create_button(隐藏 Shorts 与创建按钮:true/false), log_enabled/quality_research/log_level/capture_budget(调试日志参数)
 # 原作者: devchristian1337 (https://github.com/devchristian1337)
 # 注: 上游脚本中频道屏蔽列表(blocked_channels)显式判断 typeof $loon === "string"，仅 Loon 生效，故未纳入 Surge 参数表
