@@ -1,0 +1,28 @@
+#!name=淘宝
+#!desc=过滤淘宝广告（纯原生转换，不合入基石；需开启 MITM）
+#!requirement=CORE_VERSION>=20
+# 转换自: TaoBao.lpx (2026-11-02)，不合并基石插件
+# 原作者: RuCu6 (https://github.com/RuCu6), ishowshu (https://github.com/ishowshu), 可莉🅥 (https://github.com/luestr/ProxyResource)
+
+[Rule]
+# > 域名广告与统计拦截
+DOMAIN,adashx.m.taobao.com,REJECT,pre-matching
+DOMAIN,ossgw.alicdn.com,REJECT,pre-matching
+DOMAIN,ems.youku.com,REJECT,pre-matching
+DOMAIN,hudong.alicdn.com,REJECT,pre-matching
+DOMAIN,h-adashx.ut.taobao.com,REJECT,pre-matching
+DOMAIN,ut.taobao.com,REJECT,pre-matching
+
+# > 移除淘宝 AMDC 广告下发请求
+AND,((URL-REGEX,^http://.+/amdc/mobileDispatch),(USER-AGENT,%E6%B7%98%E5%AE%9D*)),REJECT
+
+[Map Local]
+# > 拦截淘宝开屏与广告图片素材
+^https://heic\.alicdn\.com/(?i)imgextra/i\d/[A-Za-z0-9_!]+-\d+-tps-\d+-\d+\.png_\d+x\d*q\d+\.jpg_\.heic$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://heic\.alicdn\.com/(?i)imgextra/i\d/[A-Za-z0-9_!]+-\d+-tps-\d+-\d+\.jpg_\d+x\d*q\d+\.jpg_\.heic$ data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://heic\.alicdn\.com/(?i)imgextra/i\d/\d*/?[\w!]+-\d-(?:octopus|tps)-(?:1080|1125)-\d{4}\.(?:jpg|png)_(?:1\d{3}|9\d{2})x(?:\d|1\d{3}|9\d{2})q[59]0 data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https?://gw\.alicdn\.com/(?i)imgextra/i\d+/[^/]+_!!\d+-\d+-tps-(720-1280|1080-1920|1125-1602|1242-2208)\.(jpg|png|jpeg)_[^/]+\.webp data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+[MITM]
+# 仅解密当前启用的图片广告域名，避免对已注释接口对应的 acs.m.taobao.com / guide-acs.m.taobao.com / poplayer.template.alibaba.com 做多余 MITM
+hostname = %APPEND% heic.alicdn.com, gw.alicdn.com
