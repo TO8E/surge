@@ -1,0 +1,41 @@
+#!name=京东
+#!desc=1.过滤京东广告；2.历史比价信息（默认启用获取慢慢买 Cookie 与详情嵌入表格图版；首次使用请先打开【慢慢买App-我的】，提示【获取ck成功🎉】即可正常比价）。仅支持京东标准模式（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!requirement=CORE_VERSION>=20
+# 转换自: JingDong.lpx (2026-11-02)，不合并基石插件
+# 原作者: RuCu6 (https://github.com/RuCu6), Maasea (https://github.com/Maasea), MuTu (https://github.com/githubdulong), 苍井灰灰 (https://github.com/wf021325), mw418 (https://github.com/mw418), 可莉🅥 (https://github.com/luestr/ProxyResource)
+
+[Rule]
+# AND,((DOMAIN,api.m.jd.com),(PROTOCOL,TCP)),REJECT-NO-DROP
+URL-REGEX,^http://\w{32}\.jddebug\.com/diagnose\?,REJECT
+
+[Map Local]
+^https?://m\.360buyimg\.com/(?i)mobilecms/s1125x2436_jfs data-type=text data="" status-code=200
+^https?://api\.m\.jd\.com/(?i)\?loginType=11 data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https?://api\.m\.jd\.com/(?i)client\.action\?functionId=getWidgetV1052 data-type=text data="" status-code=404
+^https://api\.m\.jd\.com/(?i)client\.action\?functionId=(?:cartCouponRecommendGoods|intelligentRecommendSku|obtainGrowingInfo|recommendShop|searchBoxWord|stationPullService|uniformRecommend) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+[Body Rewrite]
+# > 京东极速版广告（原生 Body Rewrite，替代原插件中重复的 replace-body.js 脚本）
+http-response ^https?://api\.m\.jd\.com/(?i)client\.action\?functionId=lite_advertising jdLiteAdvertisingVO sooyaaabo
+# > 关闭京东内置 HTTPDNS 与 Socket 监控上报
+http-response-jq ^https://api\.m\.jd\.com/(?i)client\.action\?functionId=basicConfig 'if .data.JDMessage.socketmonitor? then .data.JDMessage.socketmonitor.isSocketEstablishedAhead = 0 | .data.JDMessage.socketmonitor.isSocketReport = 0 else . end | if .data.JDHttpToolKit.httpdns? then .data.JDHttpToolKit.httpdns.httpdns = 0 else . end'
+# > 移除空购物车推荐楼层
+http-response-jq ^https://api\.m\.jd\.com/(?i)client\.action\?functionId=cart 'if (.cartLocationMap | type) == "object" then del(.cartLocationMap.loc_emptyCartFloor2) else . end | del(.emptyCartRecommendFloor)'
+
+[Script]
+# > 京东移除广告
+京东移除广告 = type=http-response,pattern=^https://api\.m\.jd\.com/(?i)client\.action\?functionId=(?:deliverLayer|getTabHomeInfo|myOrderInfo|orderTrackBusiness|personinfoBusiness|start|welcomeHome),script-path=https://rucu6.pages.dev/Scripts/jingdong.js,requires-body=true
+
+# > 京东比价 - 获取慢慢买 Cookie（默认开启；已适配 Surge 避免超时）
+京东比价获取慢慢买Cookie = type=http-request,pattern=^https?://apapia-sqk-weblogic\.manmanbuy\.com/(?i)baoliao/center/menu$,script-path=https://raw.githubusercontent.com/TO8E/surge/main/scripts/manmanbuy_cookie.js,requires-body=true,timeout=10,engine=jsc
+
+# > 京东比价 - 详情嵌入版（表格图，默认开启；脚本使用 URLSearchParams 故显式指定 engine=webview）
+京东比价详情嵌入表格图 = type=http-response,pattern=^https?://in\.m\.jd\.com/(?i)product/graphext/\d+\.html,script-path=https://raw.githubusercontent.com/wf021325/qx/master/js/jd_price.js,requires-body=true,timeout=60,engine=webview
+
+# > 以下为原插件中默认关闭的其他比价展示方式（Surge 同一 URL 仅允许启用一条同类脚本，如需切换请注释上方表格图并取消对应行注释）
+# 京东比价标题嵌入版 = type=http-response,pattern=^https?://api\.m\.jd\.com/(?i)client\.action\?functionId=(wareBusiness|serverConfig|basicConfig),script-path=https://raw.githubusercontent.com/wf021325/qx/master/js/jd_price.js,requires-body=true,engine=webview
+# 京东比价详情通知版 = type=http-request,pattern=^https?://in\.m\.jd\.com/(?i)product/graphext/\d+\.html,script-path=https://raw.githubusercontent.com/mw418/Loon/main/script/jd_price.js,timeout=60,engine=webview
+# 京东比价详情嵌入折线图 = type=http-response,pattern=^https?://in\.m\.jd\.com/(?i)product/graphext/\d+\.html,script-path=https://loon.103516.xyz/Script/JingDong/JingDong.price.js,requires-body=true,timeout=60,engine=webview
+
+[MITM]
+hostname = %APPEND% api.m.jd.com, in.m.jd.com, apapia-sqk-weblogic.manmanbuy.com, m.360buyimg.com
