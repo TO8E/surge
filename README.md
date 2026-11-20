@@ -22,6 +22,7 @@
 | **小黑盒去广告** | 移除小黑盒开屏与热点信息流广告（纯原生无外部脚本，基石无专属依赖，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/XiaoHeiHe_remove_ads.sgmodule` |
 | **下厨房去广告** | 移除下厨房开屏、页面推广与横幅广告（纯原生无外部脚本，基石无专属依赖，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/XiaChuFang_remove_ads.sgmodule` |
 | **朴朴超市去广告** | 移除朴朴超市开屏、轮播、热搜及推广广告（需开启 MITM；脚本已托管至 `scripts/PuPuMall_remove_ads.js`） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/PuPuMall_remove_ads.sgmodule` |
+| **彩云天气Pro** | 屏蔽彩云天气广告（需开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/CaiYun.sgmodule` |
 
 ## 转换规范说明
 

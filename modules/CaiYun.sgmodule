@@ -1,0 +1,20 @@
+#!name=彩云天气Pro
+#!desc=简单屏蔽彩云天气广告（需开启 MITM）
+#!requirement=CORE_VERSION>=20
+# 原作者: 树先生 (https://github.com/ishowshu/qx)
+
+[Rule]
+DOMAIN,abyss.cyapi.cn,REJECT,pre-matching
+DOMAIN,ad.cyapi.cn,REJECT,pre-matching
+
+[Map Local]
+^https://starplucker\.cyapi\.cn/v3/operation/features data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://starplucker\.cyapi\.cn/v3/(config/cypage/\w+/conditions|notification/message_center|operation/homefeatures) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+[Script]
+彩云天气活动推广 = type=http-response,pattern=^https://api\.caiyunapp\.com/v1/activity\?,script-path=https://raw.githubusercontent.com/ishowshu/qx/main/script/caiyun.js,requires-body=true,engine=jsc
+彩云天气推广信息 = type=http-response,pattern=^https://wrapper\.cyapi\.cn/v1/activity\?,script-path=https://raw.githubusercontent.com/ishowshu/qx/main/script/caiyun.js,requires-body=true,engine=jsc
+彩云天气卫星云图 = type=http-response,pattern=^https://wrapper\.cyapi\.cn/v1/(nafp/origin_images|satellite)\?,script-path=https://raw.githubusercontent.com/ishowshu/qx/main/script/caiyun.js,requires-body=true,engine=jsc
+
+[MITM]
+hostname = %APPEND% wrapper.cyapi.cn, api.caiyunapp.com, starplucker.cyapi.cn
