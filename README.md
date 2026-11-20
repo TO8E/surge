@@ -18,6 +18,10 @@
 | **小红书** | 过滤小红书广告、去除图片/实况/视频水印（纯原生转换，不合入基石，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/RedNote.sgmodule` |
 | **中国联通去广告** | 过滤中国联通开屏、搜索、浮窗及页面推广（纯原生无外部脚本，不合入基石，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/ChinaUnicom.sgmodule` |
 | **一汽大众去广告** | 过滤一汽大众开屏、横幅、浮标与推荐流广告（纯原生无外部脚本，不合入基石，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/FAWVW_remove_ads.sgmodule` |
+| **铁路12306** | 过滤铁路 12306 开屏与应用内广告（纯原生转换，不合入基石，需开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/Railway12306.sgmodule` |
+| **小黑盒去广告** | 移除小黑盒开屏与热点信息流广告（纯原生无外部脚本，基石无专属依赖，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/XiaoHeiHe_remove_ads.sgmodule` |
+| **下厨房去广告** | 移除下厨房开屏、页面推广与横幅广告（纯原生无外部脚本，基石无专属依赖，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/XiaChuFang_remove_ads.sgmodule` |
+| **朴朴超市去广告** | 移除朴朴超市开屏、轮播、热搜及推广广告（需开启 MITM；外部 JS 位于 `kelee.one`，建议托管本地源码至 `scripts/`） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/PuPuMall_remove_ads.sgmodule` |
 
 ## 转换规范说明
 

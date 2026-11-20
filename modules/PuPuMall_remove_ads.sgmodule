@@ -1,0 +1,22 @@
+#!name=朴朴超市去广告
+#!desc=移除朴朴超市开屏、轮播图、弹窗、悬浮动画、热搜及推广广告，精简我的页面（需开启 MITM；注意外部 JS 位于 kelee.one，建议提供源码托管至本仓库 scripts/ 目录）
+#!requirement=CORE_VERSION>=20
+# 转换自: PuPuMall_remove_ads.lpx (2026-10-02)
+# 基石对照结果: Block_HTTPDNS.lpx / BlockAdvertisers.lpx 中无朴朴超市专属依赖规则
+# 原作者: kelv1n1n (https://github.com/kelv1n1n), 可莉🅥 (https://github.com/luestr/ProxyResource)
+
+[Map Local]
+^https://j1\.pupuapi\.com/(?i)client/account/discount/order data-type=text data="" status-code=404
+^https://j1\.pupuapi\.com/(?i)client/marketing/banner/v7\?position_types=100 data-type=text data="" status-code=404
+
+[Script]
+# 注意: https://kelee.one/Resource/JavaScript/PuPuMall/PuPuMall_remove_ads.js 有 Loon UA 限制，Surge 直接拉取会 403，请提供该 JS 源文件以托管至本仓库 scripts/
+朴朴超市轮播广告 = type=http-response,pattern=^https://j1\.pupuapi\.com/(?i)client/marketing/banner/v7,script-path=https://kelee.one/Resource/JavaScript/PuPuMall/PuPuMall_remove_ads.js,requires-body=true
+朴朴超市搜索横幅 = type=http-response,pattern=^https://j1\.pupuapi\.com/(?i)client/marketing/banner/search_component_banner,script-path=https://kelee.one/Resource/JavaScript/PuPuMall/PuPuMall_remove_ads.js,requires-body=true
+朴朴超市热搜词 = type=http-response,pattern=^https://j1\.pupuapi\.com/(?i)client/search/hot_keywords/v3,script-path=https://kelee.one/Resource/JavaScript/PuPuMall/PuPuMall_remove_ads.js,requires-body=true
+朴朴超市预加载资源 = type=http-response,pattern=^https://j1\.pupuapi\.com/(?i)client/app_resource/resource_preload/list_h5_resource,script-path=https://kelee.one/Resource/JavaScript/PuPuMall/PuPuMall_remove_ads.js,requires-body=true
+朴朴超市推荐商品 = type=http-response,pattern=^https://j1\.pupuapi\.com/(?i)client/recommendation/interests/products,script-path=https://kelee.one/Resource/JavaScript/PuPuMall/PuPuMall_remove_ads.js,requires-body=true
+朴朴超市营销广告 = type=http-response,pattern=^https://j1\.pupuapi\.com/(?i)client/marketing/advertisement/v1,script-path=https://kelee.one/Resource/JavaScript/PuPuMall/PuPuMall_remove_ads.js,requires-body=true
+
+[MITM]
+hostname = %APPEND% j1.pupuapi.com
