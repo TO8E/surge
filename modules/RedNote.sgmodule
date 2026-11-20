@@ -1,0 +1,55 @@
+#!name=小红书
+#!desc=过滤小红书广告、去除图片/实况/视频水印（纯原生转换，不合入基石；需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!requirement=CORE_VERSION>=20
+# 转换自: RedNote.lpx (2026-11-02)，不合并基石插件
+# 原作者: RuCu6 (https://github.com/RuCu6), fmz200 (https://github.com/fmz200), meichiny (https://github.com/meichiny), 可莉🅥 (https://github.com/luestr/ProxyResource)
+
+[Rule]
+DOMAIN,ads-img-al.xhscdn.com,REJECT,pre-matching
+DOMAIN,ads-img-qc.xhscdn.com,REJECT,pre-matching
+DOMAIN,ads-video-al.xhscdn.com,REJECT,pre-matching
+DOMAIN,ads-video-qc.xhscdn.com,REJECT,pre-matching
+DOMAIN,t-ads.xiaohongshu.com,REJECT,pre-matching
+AND,((PROTOCOL,QUIC),(OR,((DOMAIN-SUFFIX,xiaohongshu.com),(DOMAIN-SUFFIX,rnote.com)))),REJECT
+
+[Map Local]
+# > 评论区图片水印
+^https?://ci\.(?:xiaohongshu|rnote)\.com/(?i)system_config/watermark data-type=tiny-gif status-code=200
+
+# > 惊喜弹窗与信息流广告
+^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v1/surprisebox/(?:get_style|open|submit_action) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://www\.(?:xiaohongshu|rnote)\.com/(?i)api/marketing/box/trigger\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v\d+/(?:guide/user_banner|note/guide) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://www\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v\d+/(?:ads/resource|hey/\w+/hey_gallery) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+[Body Rewrite]
+# > 搜索页净化
+http-response-jq ^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v1/search/banner_list$ '.data = {}'
+http-response-jq ^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v1/search/hot_list$ 'if (.data | type) == "object" then .data.items = [] else . end'
+http-response-jq ^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v4/search/hint 'if (.data | type) == "object" then .data.hint_words = [] else . end'
+http-response-jq ^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v4/search/trending\? 'if (.data | type) == "object" then .data.queries = [] | .data.hint_word = {} else . end'
+
+[Script]
+# > 界面整体配置与开屏广告
+小红书整体配置UI = type=http-response,pattern=^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v1/system/service/ui/config\?,script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+小红书开屏广告Config = type=http-response,pattern=^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v1/system_service/config\?,script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+小红书开屏广告Splash = type=http-response,pattern=^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v2/system_service/splash_config,script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+
+# > 详情页、关注页、信息流与搜索页广告
+小红书详情页与关注页 = type=http-response,pattern=^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v2/(?:note/widgets|user/followings/followfeed),script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+小红书详情页感兴趣的人 = type=http-response,pattern=^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v5/recommend/user/follow_recommend\?,script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+小红书关注信息流广告 = type=http-response,pattern=^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v4/followfeed\?,script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+小红书首页信息流广告 = type=http-response,pattern=^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v6/homefeed\?,script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+小红书搜索页广告 = type=http-response,pattern=^https://(?:edith|so)\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v10/search/notes\?,script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+
+# > 实况、图片、视频水印与评论区实况水印
+小红书图片与实况去水印 = type=http-response,pattern=^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v1/note/(?:imagefeed|live_photo/save),script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+小红书帖子与视频去水印 = type=http-response,pattern=^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/(?:v2/note/feed|v3/note/videofeed),script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+小红书视频保存去水印 = type=http-response,pattern=^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/(?:v4/note/videofeed|v10/note/video/save),script-path=https://rucu6.pages.dev/Scripts/xiaohongshu.js,requires-body=true
+小红书评论区实况去水印 = type=http-response,pattern=^https://edith\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/(?:v1/interaction/comment/video/download|v5/note/comment/list|v3/note/comment/sub_comments),script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/xiaohongshu/xiaohongshu.js,requires-body=true
+
+# > 原插件默认关闭的「首页笔记标题前显示时间」（Surge 同一 URL 仅运行第一条脚本，且该脚本位于 loon.103516.xyz 存在 UA 限制，故保持注释）
+# 小红书首页笔记时间 = type=http-response,pattern=^https://(?:edith|rec|www)\.(?:xiaohongshu|rnote)\.com/(?i)api/sns/v6/homefeed\?,script-path=https://loon.103516.xyz/Script/RedNote/RedNote.feedtime.js,requires-body=true
+
+[MITM]
+hostname = %APPEND% ci.xiaohongshu.com, edith.xiaohongshu.com, rec.xiaohongshu.com, www.xiaohongshu.com, so.xiaohongshu.com, ci.rnote.com, edith.rnote.com, rec.rnote.com, www.rnote.com, so.rnote.com

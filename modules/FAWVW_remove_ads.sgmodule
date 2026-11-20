@@ -1,0 +1,25 @@
+#!name=一汽大众去广告
+#!desc=过滤一汽大众集合列表、搜索提示、权益卡片、首页浮标、开屏广告、横幅及推荐流广告（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM；上游提示应用含代理检测，建议使用 TUN/增强模式）
+#!requirement=CORE_VERSION>=20
+# 转换自: FAWVW_remove_ads.lpx (2026-11-10)，不合并基石插件
+# 原作者: zirawell (https://github.com/zirawell), TO8E (https://github.com/TO8E)
+# License: GPL-3.0
+
+[Body Rewrite]
+# > 集合列表
+http-response-jq ^https?://oneapp-api\.faw-vw\.com/content/collection/getCollectionList/v\d\? '. = { returnStatus: "SUCCEED", hasMore: false, data: {} }'
+# > 搜索提示
+http-response-jq ^https?://oneapp-api\.faw-vw\.com/search/firstPage/getPromptList/v\d\? '. = { returnStatus: "SUCCEED", hasMore: false, data: [] }'
+# > 权益卡片
+http-response-jq ^https?://oneapp-api\.faw-vw\.com/benefits/benefitsCard/getInfo/v\d\? '. = { returnStatus: "SUCCEED", hasMore: false, data: [] }'
+# > 首页浮标
+http-response-jq ^https?://oneapp-api\.faw-vw\.com/content/booth/getBoothList/v\d\?.*showPositionCode=VWAPP_HOME_BUOY '. = { returnStatus: "SUCCEED", hasMore: false, data: [] }'
+# > 开屏广告、汽车学院
+http-response-jq ^https?://oneapp-api\.faw-vw\.com/content/booth/getBoothList/v\d\?.*showPositionCode=VWAPP_(?>ICE|MEB)_(?>OPEN_SCREEN_ADS|CAR_ZHIHU_COLLEGE) '. = { returnStatus: "SUCCEED", hasMore: false, data: [] }'
+# > 首页横幅及金刚区
+http-response-jq ^https?://oneapp-api\.faw-vw\.com/content/booth/getBoothList/v\d\?.*showPositionCode=VWAPP_(?>ICE|MEB)_HOME_(?>OWNER_BANNER|PROSPECTS_BANNER|CUSTOM_BANNER|KONGO|CUSTOM_KONGO) '. = { returnStatus: "SUCCEED", hasMore: false, data: [] }'
+# > 自定义页面、推荐流、活动、主题、帖子及评价卡片
+http-response-jq ^https?://oneapp-api\.faw-vw\.com/content/(?>customize/getCustomizePageName|recommend/getRecommendInfoFlows|activity/getSquareActivityList|theme/getThemeList|post/getPostsByTags|evaluate/getEvaluateCards)/v\d\? '. = { returnStatus: "SUCCEED", hasMore: false, data: [] }'
+
+[MITM]
+hostname = %APPEND% oneapp-api.faw-vw.com

@@ -1,0 +1,43 @@
+#!name=YouTube
+#!desc=移除 YouTube 首页信息流、搜索、Shorts 和播放器广告，支持可选后台播放、地区参数、隐藏 Shorts/创建按钮及字幕翻译（基于 devchristian1337，不合入基石；需开启 MITM）
+#!arguments=background_playback:false,playback_region:original,translation_enabled:false,translation_target:zh-CN,hide_home_shorts:false,hide_shorts_everywhere:false,hide_shorts_tab:false,hide_create_button:false,log_enabled:false,quality_research:false,log_level:info,capture_budget:32
+#!arguments-desc=background_playback(后台播放:true/false), playback_region(地区:original/CN/HK/TW/US/JP/KR/SG/GB/DE/RU), translation_enabled(字幕翻译:true/false), translation_target(字幕语言:zh-CN/en-US), hide_home_shorts/hide_shorts_everywhere/hide_shorts_tab/hide_create_button(隐藏 Shorts 与创建按钮:true/false), log_enabled/quality_research/log_level/capture_budget(调试日志参数)
+# 转换自: YouTube_CN.lpx (2026-11-10)，不合并基石插件
+# 原作者: devchristian1337 (https://github.com/devchristian1337)
+# 注: 上游脚本中频道屏蔽列表(blocked_channels)显式判断 typeof $loon === "string"，仅 Loon 生效，故未纳入 Surge 参数表
+
+[Rule]
+# > 强制 YouTube API 与 googlevideo 从 QUIC/UDP 443 回退到 TCP 以便 MITM 与脚本处理
+AND,((DOMAIN,youtubei.googleapis.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN,youtubei-att.googleapis.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,QUIC)),REJECT
+AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+
+[Header Rewrite]
+# > 清除媒体响应中的 Alt-Svc 备用连接提示（header-del + header-add 等价于 Loon response.header.set）
+http-response ^https://(?:[\w-]+\.)*googlevideo\.com(?::443)?/ header-del Alt-Svc
+http-response ^https://(?:[\w-]+\.)*googlevideo\.com(?::443)?/ header-add Alt-Svc clear
+
+[Script]
+# > 仅拦截 YouTube iOS 客户端的 initplayback POST 请求并返回 200 video/mp4
+YouTube初始化回放拦截 = type=http-request,pattern=^https://[a-z0-9-]+\.googlevideo\.com/(?i)initplayback(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/TO8E/surge/main/scripts/youtube_initplayback.js,requires-body=false,timeout=5,engine=jsc
+
+# > 字幕目标语言处理（translation_enabled=false 时脚本直接透传）
+YouTube字幕目标语言处理 = type=http-request,pattern=^https://(?:www\.|m\.)?youtube\.com/(?i)api/timedtext\?[^#]+$,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/main/Scripts/YouTube/request.min.js,timeout=10,argument="translation_enabled={{{translation_enabled}}}&translation_target={{{translation_target}}}"
+
+# > 配置请求、Onesie 缓存与播放/广告请求处理
+YouTube配置请求处理 = type=http-request,pattern=^https://(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)/(?i)youtubei/v1/log_event(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/main/Scripts/YouTube/request.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument="log_enabled={{{log_enabled}}}&log_level={{{log_level}}}&capture_budget={{{capture_budget}}}&playback_region={{{playback_region}}}"
+YouTubeOnesie配置缓存 = type=http-response,pattern=^https://(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.)?youtube\.com)/(?i)youtubei/v1/(?:config|log_event)(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/main/Scripts/YouTube/response.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument="log_enabled={{{log_enabled}}}&log_level={{{log_level}}}&capture_budget={{{capture_budget}}}"
+YouTube播放请求与广告配置处理 = type=http-request,pattern=^https://(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)/(?i)youtubei/v1/(?:player|get_watch|player/ad_break)(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/main/Scripts/YouTube/request.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument="log_enabled={{{log_enabled}}}&log_level={{{log_level}}}&capture_budget={{{capture_budget}}}&playback_region={{{playback_region}}}"
+
+# > 底部栏、信息流广告/Shorts 及播放响应/后台播放处理
+YouTube底部栏处理 = type=http-response,pattern=^https://(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.)?youtube\.com)/(?i)youtubei/v1/guide(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/main/Scripts/YouTube/response.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument="log_enabled={{{log_enabled}}}&log_level={{{log_level}}}&capture_budget={{{capture_budget}}}&hide_shorts_tab={{{hide_shorts_tab}}}&hide_create_button={{{hide_create_button}}}"
+YouTube信息流广告与Shorts处理 = type=http-response,pattern=^https://(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)/(?i)youtubei/v1/(?:browse|next|search)(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/main/Scripts/YouTube/response.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument="log_enabled={{{log_enabled}}}&log_level={{{log_level}}}&capture_budget={{{capture_budget}}}&hide_home_shorts={{{hide_home_shorts}}}&hide_shorts_everywhere={{{hide_shorts_everywhere}}}"
+YouTube播放响应与后台播放处理 = type=http-response,pattern=^https://(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)/(?i)youtubei/v1/(?:player|get_watch|reel/reel_watch_sequence)(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/main/Scripts/YouTube/response.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument="log_enabled={{{log_enabled}}}&log_level={{{log_level}}}&capture_budget={{{capture_budget}}}&background_playback={{{background_playback}}}&quality_research={{{quality_research}}}"
+
+# > 调试日志与媒体采样（原插件默认关闭，避免给视频媒体流带来额外开销；仅调试时取消注释并设置 log_enabled=true）
+# YouTube日志记录与导出 = type=http-request,pattern=^https://(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)/(?i)youtubei/v1/(?:browse|next|search|reel/reel_watch_sequence)(?:\?[^#]*)?$|^https://[\w-]+\.googlevideo\.com/(?i)videoplayback\?[^#]*$|^http://youtube-logs\.invalid(?::80)?(?:/[^#]*)?$,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/main/Scripts/YouTube/request.min.js,timeout=10,argument="log_enabled={{{log_enabled}}}&log_level={{{log_level}}}&capture_budget={{{capture_budget}}}&background_playback={{{background_playback}}}&quality_research={{{quality_research}}}"
+# YouTube媒体响应日志 = type=http-response,pattern=^https://[\w-]+\.googlevideo\.com/(?i)(?:videoplayback|initplayback)(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/main/Scripts/YouTube/response.min.js,timeout=10,argument="log_enabled={{{log_enabled}}}&log_level={{{log_level}}}&capture_budget={{{capture_budget}}}"
+
+[MITM]
+hostname = %APPEND% youtubei.googleapis.com, youtubei-att.googleapis.com, youtube.com, www.youtube.com, m.youtube.com, music.youtube.com, *.googlevideo.com

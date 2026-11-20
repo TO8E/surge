@@ -1,0 +1,74 @@
+#!name=高德地图
+#!desc=过滤高德地图开屏、首页、导航、搜索、打车与我的页面广告（纯原生转换，不合入基石；需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM）
+#!requirement=CORE_VERSION>=20
+# 转换自: Amap.lpx (2026-11-02)，不合并基石插件
+# 原作者: RuCu6 (https://github.com/RuCu6), kokoryh (https://github.com/kokoryh), ishowshu (https://github.com/ishowshu), 可莉🅥 (https://github.com/luestr/ProxyResource)
+
+[Rule]
+# > 域名广告拦截
+DOMAIN,amap-aos-info-nogw.amap.com,REJECT,pre-matching
+DOMAIN,free-aos-cdn-image.amap.com,REJECT,pre-matching
+DOMAIN-SUFFIX,v.smtcdns.com,REJECT,pre-matching
+
+# > 移除高德 AMDC 广告下发请求
+AND,((URL-REGEX,^http://.+/amdc/mobileDispatch),(USER-AGENT,AMapiPhone*)),REJECT
+
+[Map Local]
+# > 开屏广告
+^https://amap-aos-info-nogw\.amap\.com/(?i)ws/aos/alimama/splash_screen_rt data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# > 导航详情页 - 路线规划、地点详情页、搜索详情页、导航结束页
+^https://m5\.amap\.com/(?i)ws/shield/search/new_hotword\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://m5\.amap\.com/(?i)ws/faas/amap-navigation/card-service-(?:car-end|route-plan) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://m5\.amap\.com/(?i)ws/shield/search_poi/tips_adv\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://oss\.amap\.com/(?i)ws/banner/lists/\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# > 首页 - 推广卡片、红点角标、右上角动图、搜索框热词、左下角天气、消息横幅、底部AI
+^https://ai\.amap\.com/(?i)v1/ai_rec/home_qs\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://m5\.amap\.com/(?i)ws/aos/main/page/product/list\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://m5\.amap\.com/(?i)ws/faas/amap-navigation/(?:main-page-assets|main-page-aiqs|main-page-location|ridewalk-end-fc|usr-profile-fc/homeV2) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://m5\.amap\.com/(?i)ws/(?:mapapi/hint_text/offline_data|message/notice/list|shield/search/new_hotword) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://m5\.amap\.com/(?i)ws/valueadded/weather/v2\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://sns\.amap\.com/(?i)ws/msgbox/pull_mp\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+# > 打车页与榜单卡片
+^https://m5\.amap\.com/(?i)ws/c3frontend/af-comment/contentNearbyCard\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://m5-zb\.amap\.com/(?i)ws/boss/(?:order/car/(?:feedback/get_card_questions|feedback/viptips|king_toolbox_car_bubble|remark/satisfactionConf|rights_information)|tips/onscene_visual_optimization) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://m5-zb\.amap\.com/(?i)ws/boss/(?:pay/web/paySuccess/info/request|transportation/diversion/resource/driving) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+^https://m5\.amap\.com/(?i)ws/info_bff/rankingCard\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
+
+[Body Rewrite]
+# > 导航详情页、搜索主页、打车弹窗、顺风车横幅、附近推荐 JSON 清理
+http-response-jq ^https://m5\.amap\.com/(?i)ws/shield/search_business/process/marketingOperationStructured\? 'if (.data | type) == "object" then del(.data.tipsOperationLocation) else . end | if (.obj.data? | type) == "object" then del(.obj.data.resourcePlacement) else . end'
+http-response-jq ^https://m5\.amap\.com/(?i)ws/shield/search_poi/homepage\? 'del(.history_tags)'
+http-response-jq ^https://m5-zb\.amap\.com/(?i)ws/sharedtrip/taxi/order_detail_car_tips\? 'if (.data.carTips.data? | type) == "object" then del(.data.carTips.data.popupInfo) else . end'
+http-response-jq ^https://m5-zb\.amap\.com/(?i)ws/amap/hitch/passenger/content_info\? 'if (.data.lubanData? | type) == "object" then del(.data.lubanData.banner) else . end'
+http-response-jq ^https://m5\.amap\.com/(?i)ws/smartui/near_recommend\? 'if (.data | type) == "object" then del(.data.operation_activity) else . end'
+
+# > 我的页面、工具箱、搜索快捷角标、消息会话列表、搜索联想词
+http-response-jq ^https://m5\.amap\.com/(?i)ws/shield/dsp/profile/index/nodefaasv3\? 'del(.data.tipData, .data.wallet) | .data.cardList |= map(select(.dataKey == "MineNewFootprintCard" or .dataKey == "MineNewBEntranceCardV4")) | (.data.cardList[] | select(.dataKey == "MineNewBEntranceCardV4") | .content.entranceList_1) |= map(select(.id == 7 or .id == 8 or .id == 10 or .id == 17)) | (.data.cardList[] | select(.dataKey == "MineNewBEntranceCardV4") | .content.entranceList_2) |= map(select(.id == 1 or .id == 32 or .id == 9 or .id == 14))'
+http-response-jq ^https://sns\.amap\.com/(?i)ws/opc/tools/list\? '(if (type == "object") and ((.data | type) == "object") and ((.data.category | type) == "array") then (.data.category[] | select(type == "object") | .tools | select(type == "array") | .[] | select(type == "object")) |= del(.tips) else . end) | (if (type == "object") and ((.data | type) == "object") and ((.data.category | type) == "array") then (.data.category[] | select(type == "object") | .tools | select(type == "array")) |= map(select(if type == "object" then (((.id | type) == "string" and .id == "547") or ((.id | type) == "number" and .id == 547)) | not else true end)) else . end)'
+http-response-jq ^https://info\.amap\.com/(?i)ws/c3frontend/af-search/search\? 'if (try (.data.modules.quickLink.data.list | type) catch null) == "array" then .data.modules.quickLink.data.list |= map(if type == "object" and (.badge | type) == "object" and (.badge | has("text")) then .badge.text = "" else . end) else . end'
+http-response-jq ^https://center\.amap\.com/(?i)ws/amc/server/conv/raise_list\? 'def on_path($p; $t; f): if (try (getpath($p) | type == $t) catch false) then getpath($p) |= f else . end; on_path(["data","dataList"]; "array"; map(select(if type == "object" then (has("categoryId") or ((.data | type) == "object" and .data.id == "M_100007")) else false end)))'
+http-response-jq ^https://info\.amap\.com/(?i)ws/shield/search_business/process/middleLayer/sug\? '.tip_list |= map(select(.tip.task_tag == "common_content_general" or .tip.task_tag == "sp"))'
+
+# > 搜索页推荐词（Surge 不支持远程 jq_file，且原 Amap.recommend.jq 受 UA 限制，改用原插件 L88 内联 JQ 规则）
+http-response-jq ^https://m5\.amap\.com/(?i)ws/shield/scene/recommend\? '(if (try (.data.shadingWords.data.regions.content | type == "array") catch false) then .data.shadingWords.data.regions.content |= map(select(IN("quickLink","history","searchFind"))) else . end) | (if (try (.data.shadingWords.data.modules | type == "object") catch false) then .data.shadingWords.data.modules |= with_entries(select(.key == "searchFind")) else . end)'
+
+[Script]
+高德路线规划前推广 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/aos/perception/publicTravel/beforeNavi\?,script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德公交规划与导航结束推广 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/bus/plan/integrate\?,script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德酒店与附近页推广 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/c3frontend/(?:af-(?:hotel|launch)/page/main|af-nearby/nearby),script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德驾车路线规划推广 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/perception/drive/(?:routeInfo|routePlan),script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德搜索栏热词推广 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/shield/search_bff/hotword\?,script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德搜索详情页推广 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/shield/search_poi/(?:mps|search/sp|sug|tips_operation_location),script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德首页导航推广 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/faas/amap-navigation/(?:card-service-plan-home|main-page),script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德AOCS配置推广 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/shield/frogserver/aocs/updatable/1\?,script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德附近页推荐推广 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/shield/search/nearbyrec_smart\?,script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德开屏广告 = type=http-response,pattern=^https://m5\.amap\.com/(?i)ws/valueadded/alimama/splash_screen\?,script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德打车页卡片弹窗 = type=http-response,pattern=^https://m5-zb\.amap\.com/(?i)ws/boss/(?:car/order/content_info|order_web/friendly_information),script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德打车页红点天气 = type=http-response,pattern=^https://m5-zb\.amap\.com/(?i)ws/promotion-web/resource(/home)?\?,script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+高德导航详情页与优惠券推广 = type=http-response,pattern=^https://(?:info|m5)\.amap\.com/(?i)ws/shield/search/(?:common/coupon/info|poi/detail),script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
+
+[MITM]
+hostname = %APPEND% *.amap.com

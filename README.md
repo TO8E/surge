@@ -12,6 +12,12 @@
 | **酷安** | 过滤酷安热搜、帖子详情、评论区、信息流、首页及我的页面广告，外链 302 重定向（纯原生转换，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/CoolApk.sgmodule` |
 | **京东** | 过滤京东广告及历史比价（默认开启获取慢慢买 Cookie 与详情嵌入表格图版；纯原生转换，不合入基石，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/JingDong.sgmodule` |
 | **淘宝** | 过滤淘宝广告与 AMDC 下发请求（纯原生转换，不合入基石，需开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/TaoBao.sgmodule` |
+| **Google 重定向** | 将 `google.cn` / `g.cn` 通过 307 重定向至 `.com`（纯原生转换，不合入基石，需开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/Google.sgmodule` |
+| **高德地图** | 过滤高德地图开屏、首页、导航、搜索、打车与我的页面广告（纯原生转换，不合入基石，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/Amap.sgmodule` |
+| **YouTube** | 移除 YouTube 广告并支持 Surge `#!arguments` 参数表配置后台播放/地区/隐藏 Shorts/字幕翻译（纯原生转换，不合入基石，需开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/YouTube_CN.sgmodule` |
+| **小红书** | 过滤小红书广告、去除图片/实况/视频水印（纯原生转换，不合入基石，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/RedNote.sgmodule` |
+| **中国联通去广告** | 过滤中国联通开屏、搜索、浮窗及页面推广（纯原生无外部脚本，不合入基石，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/ChinaUnicom.sgmodule` |
+| **一汽大众去广告** | 过滤一汽大众开屏、横幅、浮标与推荐流广告（纯原生无外部脚本，不合入基石，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/FAWVW_remove_ads.sgmodule` |
 
 ## 转换规范说明
 
