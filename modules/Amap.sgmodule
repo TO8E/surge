@@ -9,15 +9,11 @@ DOMAIN,amap-aos-info-nogw.amap.com,REJECT,pre-matching
 DOMAIN,free-aos-cdn-image.amap.com,REJECT,pre-matching
 DOMAIN-SUFFIX,v.smtcdns.com,REJECT,pre-matching
 
-# > 移除高德 AMDC 广告下发请求
-AND,((URL-REGEX,^http://.+/amdc/mobileDispatch),(USER-AGENT,AMapiPhone*)),REJECT
+# > 移除高德 AMDC 广告下发请求（使用 REJECT-DROP 避免阿里 AMDC SDK 触发暴力重试风暴）
+AND,((URL-REGEX,^http://.+/amdc/mobileDispatch),(USER-AGENT,AMapiPhone*)),REJECT-DROP
 
 [Map Local]
-# > 开屏广告
-^https://amap-aos-info-nogw\.amap\.com/(?i)ws/aos/alimama/splash_screen_rt data-type=text data="{}" status-code=200 header="Content-Type: application/json"
-
 # > 导航详情页 - 路线规划、地点详情页、搜索详情页、导航结束页
-^https://m5\.amap\.com/(?i)ws/shield/search/new_hotword\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https://m5\.amap\.com/(?i)ws/faas/amap-navigation/card-service-(?:car-end|route-plan) data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https://m5\.amap\.com/(?i)ws/shield/search_poi/tips_adv\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
 ^https://oss\.amap\.com/(?i)ws/banner/lists/\? data-type=text data="{}" status-code=200 header="Content-Type: application/json"
@@ -70,4 +66,4 @@ http-response-jq ^https://m5\.amap\.com/(?i)ws/shield/scene/recommend\? '(if (tr
 高德导航详情页与优惠券推广 = type=http-response,pattern=^https://(?:info|m5)\.amap\.com/(?i)ws/shield/search/(?:common/coupon/info|poi/detail),script-path=https://rucu6.pages.dev/Scripts/amap.js,requires-body=true
 
 [MITM]
-hostname = %APPEND% *.amap.com
+hostname = %APPEND% m5.amap.com, m5-zb.amap.com, oss.amap.com, ai.amap.com, sns.amap.com, info.amap.com, center.amap.com
