@@ -2,14 +2,14 @@
 
 遵循 [Surge 官方文档规范](https://nssurge.com/llms.txt)（Surge Manual & Beta Release Log）由 Loon 插件转换而来的 Surge 专用独立模块（`.sgmodule`）。
 
-所有模块均已脱离 `Block_HTTPDNS` / `BlockAdvertisers` 全局基石插件，按需拆分并内置各自实际依赖的广告联盟与 HTTPDNS 规则，**每个模块均可单独订阅启用**。
+所有来自 `kelee.one` 的插件在转换时均脱离全局 `Block_HTTPDNS` / `BlockAdvertisers` 基石插件，仅按需拆分对应依赖写入模块；其他来源插件保持原功能直转。**每个模块均可单独订阅启用**。
 
 ## 模块订阅列表
 
 | 模块名称 | 说明 | Raw 订阅链接 |
 | --- | --- | --- |
-| **QQ音乐去广告** | 过滤 QQ 音乐广告；已拆分内置 QQ 音乐/腾讯优量汇广告统计及通用/DNSPod HTTPDNS 规则（无需 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/QQMusic_remove_ads.sgmodule` |
-| **酷安去广告** | 过滤酷安开屏、信息流、评论区与热搜广告，外链 302 重定向；已拆分内置穿山甲/优量汇/快手/百度/倍孜/京东/Sigmob/友盟及阿里/腾讯/百度/京东 HTTPDNS 规则（需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/CoolApk.sgmodule` |
+| **QQ音乐去广告** | 过滤 QQ 音乐广告；已按需拆入 `kelee.one` 基石中与 QQ 音乐/腾讯相关的广告统计及 DNSPod HTTPDNS 规则（无需 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/QQMusic_remove_ads.sgmodule` |
+| **酷安** | 过滤酷安热搜、帖子详情、评论区、信息流、首页及我的页面广告，外链 302 重定向（纯原生转换，需 Surge iOS 5.14.0+ / Mac 5.9.0+ 并开启 MITM） | `https://raw.githubusercontent.com/TO8E/surge/main/modules/CoolApk.sgmodule` |
 
 ## 转换规范说明
 
